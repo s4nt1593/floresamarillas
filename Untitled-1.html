@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flores Amarillas para Ti 🌼✨</title>
+    <!-- Tailwind CSS CDN para estilos rápidos y responsivos -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Poppins y Dancing Script para toque elegante -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <!-- FontAwesome para íconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            overflow-x: hidden;
+            background: linear-gradient(135deg, #1a1c29 0%, #2b1f3d 50%, #150e28 100%);
+            min-height: 100vh;
+        }
+
+        .font-cursive {
+            font-family: 'Dancing Script', cursive;
+        }
+
+        /* Canvas de partículas detrás */
+        #particles-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Animación del Ramo y Flores */
+        .flower-stem {
+            transform-origin: bottom center;
+            animation: growStem 2s ease-out forwards;
+        }
+
+        .flower-head {
+            transform-origin: center center;
+            animation: bloom 2.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+            animation-delay: 1.2s;
+            opacity: 0;
+            transform: scale(0);
+        }
+
+        .petal {
+            transition: all 0.3s ease;
+        }
+
+        .flower-group:hover .petal {
+            filter: brightness(1.15) drop-shadow(0 0 8px rgba(253, 224, 71, 0.8));
+        }
+
+        .ribbon {
+            animation: fadeInRibbon 1.5s ease-out forwards;
+            animation-delay: 2s;
+            opacity: 0;
+        }
+
+        @keyframes growStem {
+            0% { transform: scaleY(0); }
+            100% { transform: scaleY(1); }
+        }
+
+        @keyframes bloom {
+            0% { opacity: 0; transform: scale(0) rotate(-20deg); }
+            100% { opacity: 1; transform: scale(1) rotate(0deg); }
+        }
+
+        @keyframes fadeInRibbon {
+            0% { opacity: 0; transform: scale(0.5); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        /* Mariposa Animada */
+        .butterfly {
+            position: absolute;
+            width: 35px;
+            height: 35px;
+            pointer-events: none;
+            z-index: 10;
+            animation: flyAround 14s infinite ease-in-out;
+        }
+
+        @keyframes flyAround {
+            0% { transform: translate(0, 0) rotate(0deg) scale(0.8); }
+            25% { transform: translate(80px, -120px) rotate(15deg) scale(1); }
+            50% { transform: translate(-60px, -240px) rotate(-10deg) scale(0.9); }
+            75% { transform: translate(100px, -360px) rotate(20deg) scale(1.1); }
+            100% { transform: translate(0, -480px) rotate(0deg) scale(0.8); }
+        }
+
+        /* Modal / Tarjeta con efecto Glassmorphism */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        /* Resplandor amarillo para las flores */
+        .glow-yellow {
+            filter: drop-shadow(0 0 15px rgba(250, 204, 21, 0.6));
+        }
+
+        /* Efecto de pulso suave en los botones */
+        .pulse-btn {
+            animation: pulseGlow 2s infinite;
+        }
+
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 0 0 rgba(250, 204, 21, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(250, 204, 21, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(250, 204, 21, 0); }
+        }
+    </style>
+</head>
+<body class="text-slate-100 flex flex-col justify-between items-center min-h-screen relative px-4 py-8">
+
+    <!-- Canvas para efecto de destellos estrellados y pétalos cayendo -->
+    <canvas id="particles-canvas"></canvas>
+
+    <!-- Mariposas flotantes -->
+    <div class="butterfly" style="top: 60%; left: 15%; animation-delay: 0s;">
+        <svg viewBox="0 0 50 50" fill="#fde047">
+            <path d="M25,22 C20,10 5,12 8,25 C10,32 22,26 25,22 C28,26 40,32 42,25 C45,12 30,10 25,22 Z" opacity="0.9"/>
+            <path d="M25,24 C21,35 10,38 12,45 C14,48 23,40 25,24 C27,40 36,48 38,45 C40,38 29,35 25,24 Z" opacity="0.7"/>
+        </svg>
+    </div>
+    <div class="butterfly" style="top: 75%; right: 20%; animation-delay: -5s;">
+        <svg viewBox="0 0 50 50" fill="#facc15">
+            <path d="M25,22 C20,10 5,12 8,25 C10,32 22,26 25,22 C28,26 40,32 42,25 C45,12 30,10 25,22 Z" opacity="0.9"/>
+            <path d="M25,24 C21,35 10,38 12,45 C14,48 23,40 25,24 C27,40 36,48 38,45 C40,38 29,35 25,24 Z" opacity="0.7"/>
+        </svg>
+    </div>
+
+    <!-- Encabezado Principal -->
+    <header class="text-center z-10 my-4 max-w-lg">
+        <span class="inline-block px-4 py-1.5 rounded-full bg-yellow-400/20 text-yellow-300 text-xs font-semibold tracking-widest uppercase mb-3 border border-yellow-400/30">
+            21 de Septiembre • Día Especial
+        </span>
+        <h1 class="text-4xl sm:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-200 via-yellow-400 to-amber-500 drop-shadow-sm leading-tight">
+            Flores Amarillas
+        </h1>
+        <p class="text-sm sm:text-base text-yellow-100/80 mt-2 font-light">
+            Un detalle lleno de luz y cariño creado especialmente para ti 🌻
+        </p>
+    </header>
+
+    <!-- Control de Música / Sonido -->
+    <div class="fixed top-4 right-4 z-50">
+        <button id="music-toggle" class="bg-amber-500/20 hover:bg-amber-500/40 border border-yellow-400/40 text-yellow-300 p-3 rounded-full backdrop-blur-md transition-all shadow-lg flex items-center justify-center">
+            <i id="music-icon" class="fas fa-music text-lg"></i>
+        </button>
+    </div>
+
+    <!-- Contenedor Principal del Ramo SVG -->
+    <main class="relative z-10 my-auto flex flex-col items-center justify-center w-full max-w-md">
+        <div class="relative w-full aspect-square max-w-[340px] sm:max-w-[400px] flex items-center justify-center glow-yellow">
+            
+            <svg viewBox="0 0 500 600" class="w-full h-full">
+                <defs>
+                    <!-- Gradientes para Pétalos y Hoja -->
+                    <linearGradient id="petalGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#fef08a" />
+                        <stop offset="60%" stop-color="#facc15" />
+                        <stop offset="100%" stop-color="#eab308" />
+                    </linearGradient>
+                    <linearGradient id="petalGrad2" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" stop-color="#fde047" />
+                        <stop offset="100%" stop-color="#ca8a04" />
+                    </linearGradient>
+                    <radialGradient id="centerGrad">
+                        <stop offset="0%" stop-color="#713f12" />
+                        <stop offset="70%" stop-color="#451a03" />
+                        <stop offset="100%" stop-color="#1c0a00" />
+                    </radialGradient>
+                    <linearGradient id="stemGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stop-color="#15803d" />
+                        <stop offset="100%" stop-color="#166534" />
+                    </linearGradient>
+                    <linearGradient id="ribbonGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#f43f5e" />
+                        <stop offset="100%" stop-color="#be123c" />
+                    </linearGradient>
+                </defs>
+
+                <!-- TALLOS DEL RAMO -->
+                <g class="flower-stem">
+                    <!-- Tallo Izquierdo -->
+                    <path d="M 200 480 Q 210 380 160 250" stroke="url(#stemGrad)" stroke-width="10" fill="none" stroke-linecap="round"/>
+                    <!-- Tallo Centro -->
+                    <path d="M 250 480 Q 250 350 250 180" stroke="url(#stemGrad)" stroke-width="12" fill="none" stroke-linecap="round"/>
+                    <!-- Tallo Derecho -->
+                    <path d="M 300 480 Q 290 380 340 250" stroke="url(#stemGrad)" stroke-width="10" fill="none" stroke-linecap="round"/>
+                    
+                    <!-- Hojas verdes -->
+                    <path d="M 220 380 Q 150 360 170 320 C 190 340 220 360 220 380 Z" fill="#16a34a" opacity="0.9"/>
+                    <path d="M 280 390 Q 350 370 330 330 C 310 350 280 370 280 390 Z" fill="#15803d" opacity="0.9"/>
+                </g>
+
+                <!-- FLORES AMARILLAS (GIRASOLES) -->
+                <!-- Flor Izquierda -->
+                <g class="flower-head flower-group" style="cursor: pointer;">
+                    <g transform="translate(160, 250)">
+                        <!-- Pétalos -->
+                        <g id="petals-left">
+                            <!-- Se generan múltiples pétalos mediante rotación -->
+                            <ellipse cx="0" cy="-45" rx="11" ry="38" fill="url(#petalGrad1)" class="petal" transform="rotate(0)"/>
+                            <ellipse cx="0" cy="-45" rx="11" ry="38" fill="url(#petalGrad1)" class="petal" transform="rotate(30)"/>
+                            <ellipse cx="0" cy="-45" rx="11" ry="38" fill="url(#petalGrad1)" class="petal" transform="rotate(60)"/>
+                            <ellipse cx="0" cy="-45" rx="11" ry="38" fill="url(#petalGrad1)" class="petal" transform="rotate(90)"/>
+                            <ellipse cx="0" cy="-45" rx="11" ry="38" fill="url(#petalGrad1)" class="petal" transform="rotate(120)"/>
+                            <ellipse cx="0" cy="-45" rx="11" ry="38" fill="url(#petalGrad1)" class="petal" transform="rotate(150)"/>
+                            <ellipse cx="0" cy="-45" rx="11" ry="38" fill="url(#petalGrad1)" class="petal" transform="rotate(180)"/>
+                            <ellipse cx="0" cy="-45" rx="11" ry="38" fill="url(#petalGrad1)" class="petal" transform="rotate(210)"/>
+                            <ellipse cx="0" cy="-45" rx="11" ry="38" fill="url(#petalGrad1)" class="petal" transform="rotate(240)"/>
+                            <ellipse cx="0" cy="-45" rx="11" ry="38" fill="url(#petalGrad1)" class="petal" transform="rotate(270)"/>
+                            <ellipse cx="0" cy="-45" rx="11" ry="38" fill="url(#petalGrad1)" class="petal" transform="rotate(300)"/>
+                            <ellipse cx="0" cy="-45" rx="11" ry="38" fill="url(#petalGrad1)" class="petal" transform="rotate(330)"/>
+                        </g>
+                        <!-- Centro del girasol -->
+                        <circle cx="0" cy="0" r="24" fill="url(#centerGrad)"/>
+                        <circle cx="0" cy="0" r="20" fill="none" stroke="#a16207" stroke-width="2" stroke-dasharray="4 2"/>
+                    </g>
+                </g>
+
+                <!-- Flor Derecha -->
+                <g class="flower-head flower-group" style="animation-delay: 1.5s; cursor: pointer;">
+                    <g transform="translate(340, 250)">
+                        <g id="petals-right">
+                            <ellipse cx="0" cy="-45" rx="11" ry="38" fill="url(#petalGrad1)" class="petal" transform="rotate(15)"/>
+                            <ellipse cx="0" cy="-45" rx="11" ry="38" fill="url(#petalGrad1)" class="petal" transform="rotate(45)"/>
+                            <ellipse cx="0" cy="-45" rx="11" ry="38" fill="url(#petalGrad1)" class="petal" transform="rotate(75)"/>
+                            <ellipse cx="0" cy="-45" rx="11" ry="38" fill="url(#petalGrad1)" class="petal" transform="rotate(105)"/>
+                            <ellipse cx="0" cy="-45" rx="11" ry="38" fill="url(#petalGrad1)" class="petal" transform="rotate(135)"/>
+                            <ellipse cx="0" cy="-45" rx="11" ry="38" fill="url(#petalGrad1)" class="petal" transform="rotate(165)"/>
+                            <ellipse cx="0" cy="-45" rx="11" ry="38" fill="url(#petalGrad1)" class="petal" transform="rotate(195)"/>
+                            <ellipse cx="0" cy="-45" rx="11" ry="38" fill="url(#petalGrad1)" class="petal" transform="rotate(225)"/>
+                            <ellipse cx="0" cy="-45" rx="11" ry="38" fill="url(#petalGrad1)" class="petal" transform="rotate(255)"/>
+                            <ellipse cx="0" cy="-45" rx="11" ry="38" fill="url(#petalGrad1)" class="petal" transform="rotate(285)"/>
+                            <ellipse cx="0" cy="-45" rx="11" ry="38" fill="url(#petalGrad1)" class="petal" transform="rotate(315)"/>
+                            <ellipse cx="0" cy="-45" rx="11" ry="38" fill="url(#petalGrad1)" class="petal" transform="rotate(345)"/>
+                        </g>
+                        <circle cx="0" cy="0" r="24" fill="url(#centerGrad)"/>
+                        <circle cx="0" cy="0" r="20" fill="none" stroke="#a16207" stroke-width="2" stroke-dasharray="4 2"/>
+                    </g>
+                </g>
+
+                <!-- Flor Central Principal (Más Grande) -->
+                <g class="flower-head flower-group" style="animation-delay: 1.8s; cursor: pointer;">
+                    <g transform="translate(250, 170)">
+                        <g id="petals-center">
+                            <ellipse cx="0" cy="-55" rx="14" ry="48" fill="url(#petalGrad2)" class="petal" transform="rotate(0)"/>
+                            <ellipse cx="0" cy="-55" rx="14" ry="48" fill="url(#petalGrad2)" class="petal" transform="rotate(24)"/>
+                            <ellipse cx="0" cy="-55" rx="14" ry="48" fill="url(#petalGrad2)" class="petal" transform="rotate(48)"/>
+                            <ellipse cx="0" cy="-55" rx="14" ry="48" fill="url(#petalGrad2)" class="petal" transform="rotate(72)"/>
+                            <ellipse cx="0" cy="-55" rx="14" ry="48" fill="url(#petalGrad2)" class="petal" transform="rotate(96)"/>
+                            <ellipse cx="0" cy="-55" rx="14" ry="48" fill="url(#petalGrad2)" class="petal" transform="rotate(120)"/>
+                            <ellipse cx="0" cy="-55" rx="14" ry="48" fill="url(#petalGrad2)" class="petal" transform="rotate(144)"/>
+                            <ellipse cx="0" cy="-55" rx="14" ry="48" fill="url(#petalGrad2)" class="petal" transform="rotate(168)"/>
+                            <ellipse cx="0" cy="-55" rx="14" ry="48" fill="url(#petalGrad2)" class="petal" transform="rotate(192)"/>
+                            <ellipse cx="0" cy="-55" rx="14" ry="48" fill="url(#petalGrad2)" class="petal" transform="rotate(216)"/>
+                            <ellipse cx="0" cy="-55" rx="14" ry="48" fill="url(#petalGrad2)" class="petal" transform="rotate(240)"/>
+                            <ellipse cx="0" cy="-55" rx="14" ry="48" fill="url(#petalGrad2)" class="petal" transform="rotate(264)"/>
+                            <ellipse cx="0" cy="-55" rx="14" ry="48" fill="url(#petalGrad2)" class="petal" transform="rotate(288)"/>
+                            <ellipse cx="0" cy="-55" rx="14" ry="48" fill="url(#petalGrad2)" class="petal" transform="rotate(312)"/>
+                            <ellipse cx="0" cy="-55" rx="14" ry="48" fill="url(#petalGrad2)" class="petal" transform="rotate(336)"/>
+                        </g>
+                        <circle cx="0" cy="0" r="30" fill="url(#centerGrad)"/>
+                        <circle cx="0" cy="0" r="25" fill="none" stroke="#ca8a04" stroke-width="2.5" stroke-dasharray="5 3"/>
+                    </g>
+                </g>
+
+                <!-- MOÑO / CINTA ROJA DEL RAMO -->
+                <g class="ribbon">
+                    <path d="M 220 400 Q 250 420 280 400 Q 290 440 250 430 Q 210 440 220 400 Z" fill="url(#ribbonGrad)"/>
+                    <circle cx="250" cy="410" r="8" fill="#9f1239"/>
+                    <!-- Caídas del lazo -->
+                    <path d="M 245 415 Q 230 460 210 490 L 225 490 Q 248 450 250 415 Z" fill="url(#ribbonGrad)"/>
+                    <path d="M 255 415 Q 270 460 290 490 L 275 490 Q 252 450 250 415 Z" fill="url(#ribbonGrad)"/>
+                </g>
+            </svg>
+
+        </div>
+
+        <!-- Botones de Acción Interactivosa -->
+        <div class="mt-6 flex flex-col sm:flex-row gap-4 w-full px-4 items-center justify-center">
+            <button id="open-card-btn" class="pulse-btn w-full sm:w-auto px-7 py-3.5 bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-300 hover:to-amber-400 text-slate-900 font-bold rounded-full shadow-lg transition-all duration-300 transform hover:-translate-y-1 flex items-center justify-center gap-2">
+                <i class="fas fa-envelope-open-text text-lg"></i>
+                <span>Ver Mensaje Especial</span>
+            </button>
+
+            <button id="rain-btn" class="w-full sm:w-auto px-6 py-3.5 bg-white/10 hover:bg-white/20 text-yellow-200 border border-yellow-300/30 rounded-full backdrop-blur-md font-medium transition-all duration-300 flex items-center justify-center gap-2">
+                <i class="fas fa-magic text-yellow-400"></i>
+                <span>Lluvia de Pétalos</span>
+            </button>
+        </div>
+    </main>
+
+    <!-- Modal / Carta desplegable -->
+    <div id="card-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="glass-card max-w-lg w-full rounded-3xl p-6 sm:p-8 text-center relative border border-yellow-300/30 transform scale-95 transition-transform duration-300 id='modal-content'">
+            
+            <!-- Botón para cerrar -->
+            <button id="close-card-btn" class="absolute top-4 right-4 text-slate-300 hover:text-white bg-white/10 hover:bg-white/20 w-9 h-9 rounded-full flex items-center justify-center transition-all">
+                <i class="fas fa-times"></i>
+            </button>
+
+            <!-- Ícono decorativo -->
+            <div class="w-16 h-16 bg-yellow-400/20 rounded-full flex items-center justify-center mx-auto mb-4 border border-yellow-400/40">
+                <span class="text-3xl">🌼</span>
+            </div>
+
+            <!-- Título de la Carta -->
+            <h2 class="text-3xl font-bold font-cursive text-yellow-300 mb-2">
+                ¡Feliz Día de las Flores Amarillas!
+            </h2>
+            
+            <div class="w-16 h-1 bg-gradient-to-r from-transparent via-yellow-400 to-transparent mx-auto mb-4"></div>
+
+            <!-- Mensaje Personalizable -->
+            <div class="text-slate-200 text-sm sm:text-base leading-relaxed space-y-3 my-4 text-left sm:text-center max-h-[60vh] overflow-y-auto px-2">
+                <p>
+                    Un detalle especial para mis mejores amigas. ✨
+                </p>
+                <p>
+                    Que este día esté te vaya de maravilla eres una gran persona. Gracias por iluminar mi vida con su amistad y acompañarme siempre.
+                </p>
+                <p class="font-semibold text-yellow-200 pt-2 text-center">
+                    ¡Se merecen un jardín entero de cosas hermosas! 🌻💛
+                </p>
+            </div>
+
+            <!-- Firma / Pie -->
+            <div class="mt-6 pt-4 border-t border-white/10 flex items-center justify-between text-xs text-yellow-100/70">
+                <span>Con mucho cariño</span>
+                <span class="font-cursive text-lg text-yellow-300">Con Amor ❤️</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="relative z-10 text-center text-xs text-yellow-200/50 my-2">
+        Hecho con ❤️ para regalar luz este 21 de septiembre
+    </footer>
+
+    <!-- Audio de Fondo (Sonido suave ambiental generado vía Web Audio API o etiqueta audio) -->
+    <audio id="bg-audio" loop src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=lofi-study-112191.mp3"></audio>
+
+    <script>
+        // --- 1. LÓGICA DE PARTÍCULAS Y PÉTALOS (CANVAS) ---
+        const canvas = document.getElementById('particles-canvas');
+        const ctx = canvas.getContext('2d');
+
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        });
+
+        class Particle {
+            constructor(isPetal = false) {
+                this.reset(isPetal);
+            }
+
+            reset(isPetal = false) {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height - height;
+                this.size = isPetal ? Math.random() * 8 + 6 : Math.random() * 3 + 1;
+                this.speedY = isPetal ? Math.random() * 1.5 + 1 : Math.random() * 0.8 + 0.2;
+                this.speedX = Math.random() * 1 - 0.5;
+                this.opacity = Math.random() * 0.7 + 0.3;
+                this.isPetal = isPetal;
+                this.rotation = Math.random() * 360;
+                this.rotationSpeed = (Math.random() - 0.5) * 2;
+                this.color = isPetal ? '#facc15' : '#fef08a';
+            }
+
+            update() {
+                this.y += this.speedY;
+                this.x += Math.sin(this.y * 0.01) + this.speedX;
+                this.rotation += this.rotationSpeed;
+
+                if (this.y > height + 20) {
+                    this.reset(this.isPetal);
+                    this.y = -10;
+                }
+            }
+
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate((this.rotation * Math.PI) / 180);
+                ctx.globalAlpha = this.opacity;
+
+                if (this.isPetal) {
+                    // Dibujar pétalo flotante
+                    ctx.fillStyle = this.color;
+                    ctx.beginPath();
+                    ctx.moveTo(0, 0);
+                    ctx.quadraticCurveTo(this.size, -this.size, 0, -this.size * 2);
+                    ctx.quadraticCurveTo(-this.size, -this.size, 0, 0);
+                    ctx.fill();
+                } else {
+                    // Dibujar destellos/estrellas suaves
+                    ctx.fillStyle = this.color;
+                    ctx.shadowBlur = 10;
+                    ctx.shadowColor = '#fde047';
+                    ctx.beginPath();
+                    ctx.arc(0, 0, this.size, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+                ctx.restore();
+            }
+        }
+
+        // Crear grupo de partículas de fondo
+        const particles = Array.from({ length: 50 }, () => new Particle(false));
+        const petals = Array.from({ length: 20 }, () => new Particle(true));
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, width, height);
+            
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+
+            petals.forEach(pt => {
+                pt.update();
+                pt.draw();
+            });
+
+            requestAnimationFrame(animateParticles);
+        }
+
+        animateParticles();
+
+        // Lluvia adicional de pétalos al presionar botón
+        document.getElementById('rain-btn').addEventListener('click', () => {
+            for (let i = 0; i < 25; i++) {
+                petals.push(new Particle(true));
+            }
+        });
+
+
+        // --- 2. CONTROL DEL MODAL / CARTA ---
+        const openCardBtn = document.getElementById('open-card-btn');
+        const closeCardBtn = document.getElementById('close-card-btn');
+        const cardModal = document.getElementById('card-modal');
+
+        function openModal() {
+            cardModal.classList.remove('opacity-0', 'pointer-events-none');
+            cardModal.classList.add('opacity-100', 'pointer-events-auto');
+        }
+
+        function closeModal() {
+            cardModal.classList.add('opacity-0', 'pointer-events-none');
+            cardModal.classList.remove('opacity-100', 'pointer-events-auto');
+        }
+
+        openCardBtn.addEventListener('click', openModal);
+        closeCardBtn.addEventListener('click', closeModal);
+
+        // Cerrar al hacer clic fuera de la tarjeta
+        cardModal.addEventListener('click', (e) => {
+            if (e.target === cardModal) closeModal();
+        });
+
+
+        // --- 3. REPRODUCCIÓN DE MÚSICA DE FONDO ---
+        const musicToggle = document.getElementById('music-toggle');
+        const musicIcon = document.getElementById('music-icon');
+        const bgAudio = document.getElementById('bg-audio');
+        let isPlaying = false;
+
+        musicToggle.addEventListener('click', () => {
+            if (isPlaying) {
+                bgAudio.pause();
+                musicIcon.className = 'fas fa-music text-lg';
+                musicToggle.classList.remove('bg-yellow-400', 'text-slate-900');
+            } else {
+                bgAudio.play().then(() => {
+                    musicIcon.className = 'fas fa-pause text-lg';
+                    musicToggle.classList.add('bg-yellow-400', 'text-slate-900');
+                }).catch(err => console.log("Audio interact requirement:", err));
+            }
+            isPlaying = !isPlaying;
+        });
+    </script>
+</body>
+</html>
